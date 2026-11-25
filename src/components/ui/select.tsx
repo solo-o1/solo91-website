@@ -12,7 +12,7 @@ const SelectTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={cn('field flex items-center justify-between text-left data-[placeholder]:text-muted-foreground/60', className)}
+    className={cn('field flex items-center justify-between text-start data-[placeholder]:text-muted-foreground/60', className)}
     {...props}
   >
     {children}
@@ -51,14 +51,14 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-pointer select-none items-center py-2 pl-3 pr-8 text-sm outline-none',
+      'relative flex w-full cursor-pointer select-none items-center py-2 ps-3 pe-8 text-sm outline-none',
       'data-[highlighted]:bg-primary/15 data-[highlighted]:text-primary data-[state=checked]:text-primary',
       className,
     )}
     {...props}
   >
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-    <span className="absolute right-2 flex h-4 w-4 items-center justify-center">
+    <span className="absolute end-2 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-3.5 w-3.5" strokeWidth={1.5} />
       </SelectPrimitive.ItemIndicator>

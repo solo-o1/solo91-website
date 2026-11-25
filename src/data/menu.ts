@@ -19,6 +19,7 @@ export type MenuSection = {
 export type MenuTab = {
   id: string;
   label: string;
+  labelAr: string;
   sections: MenuSection[];
 };
 
@@ -56,6 +57,7 @@ export const menu: MenuTab[] = [
   {
     id: 'breakfast',
     label: 'Breakfast',
+    labelAr: 'فطور',
     sections: [
       {
         en: 'Breakfast',
@@ -83,6 +85,7 @@ export const menu: MenuTab[] = [
   {
     id: 'starters',
     label: 'Starters',
+    labelAr: 'مقبلات',
     sections: [
       {
         en: 'Hot Starters',
@@ -139,6 +142,7 @@ export const menu: MenuTab[] = [
   {
     id: 'mains',
     label: 'Mains',
+    labelAr: 'أطباق رئيسية',
     sections: [
       {
         en: 'Main Dishes',
@@ -208,6 +212,7 @@ export const menu: MenuTab[] = [
   {
     id: 'pizza-pasta',
     label: 'Pizza & Pasta',
+    labelAr: 'بيتزا وباستا',
     sections: [
       {
         en: 'Pizza',
@@ -258,6 +263,7 @@ export const menu: MenuTab[] = [
   {
     id: 'desserts',
     label: 'Desserts',
+    labelAr: 'حلويات',
     sections: [
       {
         en: 'Desserts',
@@ -289,6 +295,7 @@ export const menu: MenuTab[] = [
   {
     id: 'coffee',
     label: 'Coffee',
+    labelAr: 'قهوة',
     sections: [
       {
         en: 'Hot Drinks',
@@ -349,6 +356,7 @@ export const menu: MenuTab[] = [
   {
     id: 'drinks',
     label: 'Drinks',
+    labelAr: 'مشروبات',
     sections: [
       {
         en: 'Mojito',
@@ -456,6 +464,7 @@ export const menu: MenuTab[] = [
   {
     id: 'shisha',
     label: 'Shisha',
+    labelAr: 'أراجيل',
     sections: [
       {
         en: 'Classic Shisha',

@@ -3,15 +3,14 @@ import { AnimatePresence, motion } from 'motion/react';
 import { GoldUnderlineHeading, Reveal } from '@/components/shared';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { site, whatsappLink } from '@/data/site';
+import { useLang } from '@/i18n';
 
+// Canonical values are language-independent, so switching language keeps the selection.
 const times = Array.from({ length: 31 }, (_, i) => {
   const minutes = 9 * 60 + i * 30; // 9:00 AM → 12:00 AM
-  const h24 = Math.floor(minutes / 60) % 24;
-  const m = minutes % 60;
-  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
-  return `${h12}:${m === 0 ? '00' : '30'} ${h24 < 12 ? 'AM' : 'PM'}`;
+  return { value: String(minutes), h24: Math.floor(minutes / 60) % 24, m: minutes % 60 };
 });
-const partySizes = [...Array.from({ length: 11 }, (_, i) => `${i + 1} ${i === 0 ? 'guest' : 'guests'}`), '12+ guests'];
+const partySizes = [...Array.from({ length: 11 }, (_, i) => String(i + 1)), '12+'];
 
 const today = () => {
   const d = new Date();
@@ -20,6 +19,8 @@ const today = () => {
 };
 
 export function Reservations() {
+  const { c, dir } = useLang();
+  const r = c.reserve;
   const [time, setTime] = useState('');
   const [party, setParty] = useState('');
   const [error, setError] = useState('');
@@ -33,27 +34,18 @@ export function Reservations() {
     const phone = String(data.get('phone') || '').trim();
     const email = String(data.get('email') || '').trim();
     if (!date || !time || !party || !name || !phone) {
-      setError('Please choose a date, time and party size, and add your name and phone number.');
+      setError(r.error);
       return;
     }
     setError('');
-    const pretty = new Date(`${date}T12:00:00`).toLocaleDateString('en-GB', {
+    const pretty = new Date(`${date}T12:00:00`).toLocaleDateString(r.dateLocale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
-    const message = [
-      'Hello Solo 91, I would like to reserve a table.',
-      `Date: ${pretty}`,
-      `Time: ${time}`,
-      `Party size: ${party}`,
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      email ? `Email: ${email}` : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
+    const t = times.find((x) => x.value === time)!;
+    const message = r.message({ date: pretty, time: r.timeLabel(t.h24, t.m), party: r.partyLabel(party), name, phone, email });
     window.open(whatsappLink(message), '_blank', 'noopener');
     setSent(true);
   };
@@ -67,8 +59,8 @@ export function Reservations() {
       />
       <div className="relative mx-auto max-w-[600px]">
         <div className="mb-12 text-center">
-          <GoldUnderlineHeading>Reserve Your Table</GoldUnderlineHeading>
-          <p className="mt-5 text-muted-foreground">We look forward to welcoming you.</p>
+          <GoldUnderlineHeading>{r.title}</GoldUnderlineHeading>
+          <p className="mt-5 text-muted-foreground">{r.sub}</p>
         </div>
 
         <Reveal>
@@ -82,51 +74,51 @@ export function Reservations() {
             >
               <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-7 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label htmlFor="date" className="field-label">Date</label>
+                  <label htmlFor="date" className="field-label">{r.date}</label>
                   <input id="date" name="date" type="date" min={today()} required className="field" />
                 </div>
                 <div>
-                  <span id="time-label" className="field-label">Time</span>
-                  <Select value={time} onValueChange={setTime}>
+                  <span id="time-label" className="field-label">{r.time}</span>
+                  <Select value={time} onValueChange={setTime} dir={dir}>
                     <SelectTrigger aria-labelledby="time-label">
-                      <SelectValue placeholder="Select a time" />
+                      <SelectValue placeholder={r.timePh} />
                     </SelectTrigger>
                     <SelectContent>
                       {times.map((t) => (
-                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                        <SelectItem key={t.value} value={t.value}>{r.timeLabel(t.h24, t.m)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <span id="party-label" className="field-label">Party Size</span>
-                  <Select value={party} onValueChange={setParty}>
+                  <span id="party-label" className="field-label">{r.party}</span>
+                  <Select value={party} onValueChange={setParty} dir={dir}>
                     <SelectTrigger aria-labelledby="party-label">
-                      <SelectValue placeholder="Number of guests" />
+                      <SelectValue placeholder={r.partyPh} />
                     </SelectTrigger>
                     <SelectContent>
                       {partySizes.map((p) => (
-                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                        <SelectItem key={p} value={p}>{r.partyLabel(p)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="sm:col-span-2">
-                  <label htmlFor="name" className="field-label">Full Name</label>
-                  <input id="name" name="name" autoComplete="name" required className="field" placeholder="Your name" />
+                  <label htmlFor="name" className="field-label">{r.name}</label>
+                  <input id="name" name="name" autoComplete="name" required className="field" placeholder={r.namePh} />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="field-label">Phone Number</label>
-                  <input id="phone" name="phone" type="tel" autoComplete="tel" required className="field" placeholder="07X XXX XXXX" />
+                  <label htmlFor="phone" className="field-label">{r.phone}</label>
+                  <input id="phone" name="phone" type="tel" dir="ltr" autoComplete="tel" required className="field rtl:text-right" placeholder="07X XXX XXXX" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="field-label">Email Address</label>
-                  <input id="email" name="email" type="email" autoComplete="email" className="field" placeholder="Optional" />
+                  <label htmlFor="email" className="field-label">{r.email}</label>
+                  <input id="email" name="email" type="email" dir="ltr" autoComplete="email" className="field rtl:text-right" placeholder={r.emailPh} />
                 </div>
 
                 <div className="sm:col-span-2">
                   {error && <p className="mb-4 text-sm text-[#e8a87c]" role="alert">{error}</p>}
-                  <button type="submit" className="btn-gold w-full">Confirm Reservation</button>
+                  <button type="submit" className="btn-gold w-full">{r.submit}</button>
                   <AnimatePresence>
                     {sent && (
                       <motion.p
@@ -135,14 +127,14 @@ export function Reservations() {
                         className="mt-4 text-center text-sm text-primary"
                         role="status"
                       >
-                        Your request is ready in WhatsApp — press send and we’ll confirm your table shortly.
+                        {r.sent}
                       </motion.p>
                     )}
                   </AnimatePresence>
                   <p className="mt-5 text-center text-sm text-muted-foreground">
-                    Reservations are confirmed by phone or WhatsApp on{' '}
-                    <a href={site.phoneHref} className="text-primary hover:underline">{site.phoneDisplay}</a>. Walk-ins
-                    always welcome.
+                    {r.notePrefix}{' '}
+                    <a href={site.phoneHref} dir="ltr" className="text-primary hover:underline">{site.phoneDisplay}</a>
+                    {r.noteSuffix}
                   </p>
                 </div>
               </form>

@@ -25,3 +25,9 @@ One-page site for Solo 91, Zarqa branch (Madinat Al-Sharq, Jordan). Stack: React
 ## Open items to confirm with the café
 - Transliterations: Mango Giraro, Kaif, Arabiya milkshake, Iced Shaken.
 - The Gatherings photo shows the "Solo Show", which only appears on the Irbid menu.
+
+## Arabic / English
+- Language button (عربي / EN) in the navbar and the mobile menu. All copy lives in `src/i18n.tsx` (`en` and `ar` objects with the same shape); menu items carry both names in `src/data/menu.ts`.
+- Arabic switches the page to `dir="rtl"`, uses the Alexandria font, and turns off letter-spacing for Arabic text (`:lang(ar)` in `src/index.css`).
+- `?lang=ar` in the URL opens the Arabic version directly; the choice is remembered in localStorage.
+- The Arabic hero uses a mirrored video edit (`public/media/hero-rtl.mp4`) so the text never covers the product. The Signatures section keeps its left text column in both languages because its photo has "Solo" written on the plate.

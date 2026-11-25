@@ -1,4 +1,5 @@
 import { GrainOverlay } from '@/components/shared';
+import { LanguageProvider } from '@/i18n';
 import { Navbar } from '@/sections/Navbar';
 import { Hero } from '@/sections/Hero';
 import { Story } from '@/sections/Story';
@@ -11,7 +12,7 @@ import { Footer } from '@/sections/Footer';
 
 export default function App() {
   return (
-    <>
+    <LanguageProvider>
       <GrainOverlay />
       <Navbar />
       <main>
@@ -24,6 +25,6 @@ export default function App() {
         <Reservations />
       </main>
       <Footer />
-    </>
+    </LanguageProvider>
   );
 }
