@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(24, 30%, 4%);
+  --foreground: hsl(40, 33%, 91%);
+  --primary: hsl(37, 55%, 51%);
+  --primary-foreground: hsl(24, 30%, 4%);
+  --muted-foreground: hsl(40, 15%, 60%);
+  --border: hsl(37, 40%, 25%);
+  --card: hsl(24, 28%, 7%);
+  --accent: hsl(37, 55%, 51%);
+  --footer: hsl(24, 32%, 3%);
+  /* channel versions so Tailwind opacity modifiers (e.g. text-primary/70) work */
+  --c-background: 24 30% 4%;
+  --c-foreground: 40 33% 91%;
+  --c-primary: 37 55% 51%;
+  --c-primary-foreground: 24 30% 4%;
+  --c-muted-foreground: 40 15% 60%;
+  --c-border: 37 40% 25%;
+  --c-card: 24 28% 7%;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  /* Cormorant defaults to old-style figures (the 9 drops, the 1 shrinks); use full-height numbers */
+  h1, h2, h3, .font-serif {
+    font-variant-numeric: lining-nums;
+  }
+  h1, h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: 0.04em;
+  }
+  h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+  [lang='ar'] {
+    font-family: 'Alexandria', Tahoma, sans-serif;
+    letter-spacing: 0;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  :focus-visible {
+    outline: 1px solid var(--primary);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .ui-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 11px;
+    font-weight: 400;
+  }
+  .btn-gold,
+  .btn-ghost,
+  .btn-outline {
+    @apply ui-label inline-flex items-center justify-center gap-2 px-7 py-4;
+    transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .btn-gold {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn-gold:hover {
+    background: hsl(37, 60%, 58%);
+    box-shadow: 0 0 24px rgba(201, 151, 62, 0.3);
+  }
+  .btn-ghost {
+    border: 1px solid rgba(245, 240, 232, 0.6);
+    color: var(--foreground);
+  }
+  .btn-ghost:hover {
+    border-color: var(--foreground);
+    background: rgba(245, 240, 232, 0.06);
+    box-shadow: 0 0 24px rgba(201, 151, 62, 0.3);
+  }
+  .btn-outline {
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.75rem 1.25rem;
+  }
+  .btn-outline:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 0 24px rgba(201, 151, 62, 0.3);
+  }
+  .field {
+    @apply w-full px-4 py-3 text-[15px] text-foreground placeholder:text-muted-foreground/60;
+    background: rgba(255, 255, 255, 0.04);
+    border: 0;
+    border-bottom: 1px solid var(--primary);
+    border-radius: 0;
+    outline: none;
+    transition: background 0.2s ease;
+  }
+  .field:focus {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .field-label {
+    @apply mb-2 block uppercase text-primary;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    font-weight: 400;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
